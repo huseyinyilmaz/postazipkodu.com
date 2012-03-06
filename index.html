@@ -43,9 +43,14 @@
     
     <script src="text/template" id="listTemplate">
       <ul class="nav nav-pills nav-stacked">      
-      <% collection.each(function(item){%>
+      <% collection.each(function(item){
+      var value = item.get('value');
+      %>
       <li>
-	<a href="#" id="<%=item.get('model_id')%>"><%=item.get('code')%></a>
+	<a href="#" id="<%=item.get('model_id')%>"><%=item.get('code')%>
+	<%if(value){%>(<%=value%>)<%};%>
+      </a>
+	
       </li>
       <%});%>
     </ul>
@@ -105,7 +110,7 @@
       </div>
 
       <div class="row">
-	<span class="span2" id="cityContainer"> </span>
+	<span class="span3" id="cityContainer"> </span>
 	<span class="span3" id="countyContainer"> </span>
 	<span class="span3" id="districtContainer"> </span>
 	<span class="span3" id="providenceContainer"> </span>
