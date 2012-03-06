@@ -59,6 +59,8 @@ BaseView = Backbone.View.extend(
 	var id=event.target.id;
 	this.subModuleContainer.html(loadingContent);
 	this.subModuleViewObj && this.subModuleViewObj.clearSubModules();
+	this.$('li').removeClass('active');
+	$(event.target).parent().addClass('active');
 	containers.result.html('');
 	$.getJSON(getFileUrl(id),
 		  _.bind(function(data, textStatus, jqXHR){
@@ -78,6 +80,8 @@ ProvidenceView = BaseView.extend({
     onClick:function(event){
 	var id=event.target.id;
 	var providence = this.collection.find(function(e){return e.get('model_id')==id;});
+	this.$('li').removeClass('active');
+	$(event.target).parent().addClass('active');
 	containers.result.html(templates.resultTemplate({location:providence.get('code'),code:providence.get('value')}));
     }
 });
