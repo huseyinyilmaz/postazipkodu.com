@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>postazipkodu.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+
+    <link href="assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .r {
+	  text-align: right;
+	  padding-top: 8px;
+      }
+    </style>
+    <link href="assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!--------------->
+    <!-- TEMPLATES -->
+    <!--------------->
+    <script src="text/template" id="loadingTemplate">
+      <img src="assets/images/loader.gif" alt="Loading..."></img>
+    </script>
+    
+    <script src="text/template" id="listTemplate">
+      <ul class="nav nav-pills nav-stacked">      
+      <% collection.each(function(item){%>
+      <li>
+	<a href="#" id="<%=item.get('model_id')%>"><%=item.get('code')%></a>
+      </li>
+      <%});%>
+    </ul>
+    </script>
+    
+    <script src="text/template" id="resultTemplate">
+      <div class="alert alert-info">
+	<p><%=location%> icin posta kodu: <%=code%></p>
+      </div>
+    </script>
+
+    <!--------------->
+    <!-- ANALYTICS -->
+    <!--------------->
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-29759413-1']);
+      _gaq.push(['_setDomainName', 'postazipkodu.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <!--------------------->
+    <!-- GOOGLE PLUS ONE -->
+    <!--------------------->
+
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Turkiye Posta Kodu Listesi</a>
+	  <div class="r">
+
+<a href="https://twitter.com/share" class="twitter-share-button" data-via="yilmaz_huseyin" data-lang="tr" data-size="large" data-hashtags="postazipkodu">Tweetle</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+	    
+
+	  </div>
+	</div>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1>Posta kodunuzu bulun</h1>
+        <p>Bulundugunu ilin posta kodunu bulabilirsiniz. Sadece asagidaki listeden bulundugunuz bolgeyi secin.</p>
+	<div id="resultContainer"></div>
+        <!-- <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p> -->
+      </div>
+
+      <div class="row">
+	<span class="span2" id="cityContainer"> </span>
+	<span class="span3" id="countyContainer"> </span>
+	<span class="span3" id="districtContainer"> </span>
+	<span class="span3" id="providenceContainer"> </span>
+      </div>
+      
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="assets/jquery/jquery-1.7.1.min.js"></script>
+    <script src="assets/underscore/underscore-min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/backbone/backbone.js"></script>
+    <script src="assets/main.js"></script>
+  </body>
+</html>
