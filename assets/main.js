@@ -49,7 +49,6 @@ $(function(){
 		this.baseKey = options.baseKey;
 		console.log(this.container);
 		this.container.html(postal.loadingContent);
-		this.clearSubModules();
 		this.collection = new postal.BaseCollection();
 		this.collection.url= postal.getFileUrl(this.baseKey);
 		
@@ -79,8 +78,8 @@ $(function(){
 	    },
 	    onClick: function(event){
 		var id=event.target.id;
+		this.clearSubModules();
 		this.subModuleViewObj = new this.subModuleView({baseKey:id});
-		
 		this.$('li').removeClass('active');
 		$(event.target).parent().addClass('active');
 		//empty results
