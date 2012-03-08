@@ -27,6 +27,9 @@
       .h170{
 	  height: 170px;
       }
+      .pb10{
+	  padding-bottom: 10px;
+      }
     </style>
     <link href="assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -43,6 +46,7 @@
     </script>
     
     <script src="text/template" id="listTemplate">
+      <h3><%= display %> seciniz.</h3>
       <ul class="nav nav-pills nav-stacked">      
       <% collection.each(function(item){
       var value = item.get('value');
@@ -59,7 +63,8 @@
     
     <script src="text/template" id="resultTemplate">
       <div class="alert alert-info">
-	<p><%=location%> icin posta kodu: <%=code%></p>
+	<a class="close" data-dismiss="alert">×</a>	
+	<h2><%=location%> icin posta kodu: <strong><%=code%></strong></h2>
       </div>
     </script>
 
@@ -100,19 +105,15 @@
 
 
     <div class="container">
-      <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit h170">
-        <h1>Posta kodunuzu bulun</h1>
-        <p>Bulundugunuz ilin posta kodunu bulabilirsiniz. Sadece asagidaki listeden bulundugunuz bolgeyi secin.</p>
-	<div id="resultContainer"></div>
-        <!-- <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p> -->
-      </div>
+
+      <h4 class="pb10">Bulundugunuz ilin posta kodunu bulabilirsiniz. Sadece asagidaki listeden bulundugunuz bolgeyi secin.</h4>
+      <div id="resultContainer"></div>
 
       <div class="row">
 	<span class="span3" id="cityContainer"> </span>
-	<span class="span3" id="countyContainer"> </span>
-	<span class="span3" id="districtContainer"> </span>
+	<span class="span3" id="townshipContainer"> </span>
 	<span class="span3" id="providenceContainer"> </span>
+	<span class="span3" id="districtContainer"> </span>
       </div>
       
     </div> <!-- /container -->
