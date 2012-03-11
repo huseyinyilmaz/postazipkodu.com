@@ -51,8 +51,8 @@
       <% collection.each(function(item){
       var value = item.get('value');
       %>
-      <li>
-	<a id="<%=item.get('model_id')%>"><%=item.get('code')%>
+      <li id="<%=item.get('model_id')%>">
+	<a href="#<%=urlBase + item.get('model_id')%>"><%=item.get('code')%>
 	<%if(value){%>(<%=value%>)<%};%>
       </a>
 	
@@ -112,8 +112,8 @@
       <div class="row">
 	<span class="span3" id="cityContainer"> </span>
 	<span class="span3" id="townshipContainer"> </span>
-	<span class="span3" id="providenceContainer"> </span>
 	<span class="span3" id="districtContainer"> </span>
+	<span class="span3" id="providenceContainer"> </span>
       </div>
       
     </div> <!-- /container -->

@@ -19,17 +19,28 @@ $(function(){
 	    providence: $('#providenceContainer'),
 	    district: $('#districtContainer'),
 	    result: $('#resultContainer')},
-    
+	/*
+	 * Create a file url for given key.
+	 */
 	getFileUrl: function getFileUrl(key){
 	    return this.base + key + '.json';
 	},
-
-	setClear: function(view){
-	    view.setClear();
-	    if(view.subModuleViewObj)
-		setClear(view.subModuleViewObj);
+	/*
+	 * create an hash tag for given url
+	 * usage: postal.getUrlBase(myViewObj);
+	 * currentView and base arguments are used
+	 * for recursive calls
+	 */
+	getUrlBase: function(view,currentView,base){
+	    if(!currentView){
+		currentView = postal.citiesView;
+		base = '';
+	    }
+	    if(view == currentView)
+		return base + '/'+ currentView.code + '/';
+	    else
+		return postal.getUrlBase(view, currentView.subModuleViewObj, base + '/' + currentView.code + '/' + currentView.selected);
 	}
-    
     };
 
     ////////////
@@ -41,33 +52,32 @@ $(function(){
 
     postal.BaseView = Backbone.View.extend({
 	    tagName:'div',
-	    events:{
-		'click a': 'onClick'
-	    },
 
 	    initialize:function(options){
 		this.baseKey = options.baseKey;
-		console.log(this.container);
 		this.container.html(postal.loadingContent);
 		this.collection = new postal.BaseCollection();
 		this.collection.url= postal.getFileUrl(this.baseKey);
 		
 		this.collection.fetch({
 		    success:_.bind(function(models,xhr,options){
-			console.log('success');
      			this.container.children().remove();
      			this.container.append(this.el);
 			this.render();
+			if(!_.isEmpty(this.options.selections))
+			    this.select(this.options.selections);
 		    }, this),
 		    error:_.bind(function(models,xhr,options){
-			console.log('error');
+			alert('Server baglantisinda bir problem olustu.');
 		    }, this)
 		});
 
 	    },
 
 	    render:function(){
-		this.$el.html(postal.templates.listTemplate({collection:this.collection,display:this.display}));
+		this.$el.html(postal.templates.listTemplate({collection:this.collection,
+							     display:this.display,
+							     urlBase: postal.getUrlBase(this)}));
 	    },
 	    
 	    clearSubModules:function(){
@@ -76,21 +86,43 @@ $(function(){
 		    this.subModuleViewObj.clearSubModules();
 		}
 	    },
-	    onClick: function(event){
-		var id=event.target.id;
-		this.clearSubModules();
-		this.subModuleViewObj = new this.subModuleView({baseKey:id});
-		this.$('li').removeClass('active');
-		$(event.target).parent().addClass('active');
-		//empty results
-		postal.containers.result.html('');
+	
+	    select:function(selections){
+		var selected = _.first(selections);
+		selections = _.rest(selections);
+		if(this.selected != selected){
+		    //clear submodules
+		    this.clearSubModules();
+		    postal.containers.result.html('');
 
+		    this.selected = selected;
+		    this.$('li').removeClass('active');
+		    this.$('#'+this.selected).addClass('active');
+		    this.subModuleViewObj = new this.subModuleView({baseKey:selected,selections:selections});
+		}else{
+		    //if there is still any selections left call subModules
+		    if(!_.isEmpty(selections))
+			this.subModuleViewObj.select(selections);
+		}
 	    }
 	});
 
-    postal.DistrictView = postal.BaseView.extend({
+    postal.ProvidenceView = postal.BaseView.extend({
 	display: 'Mahalle/Koy',
-	container: postal.containers.district,
+	code: 'providence',
+	container: postal.containers.providence,
+
+	select: function(selections){
+	    var selected = _.first(selections);
+	    var providence = this.collection.find(function(e){return e.get('model_id')==selected;});
+
+	    this.$('li').removeClass('active');
+	    this.$('#'+ selected).addClass('active');
+
+	    postal.containers.result.html(postal.templates.resultTemplate({location:providence.get('code'),code:providence.get('value')}));
+
+	},
+	
 	onClick: function(event){
 	    var id=event.target.id;
 	    var district = this.collection.find(function(e){return e.get('model_id')==id;});
@@ -100,44 +132,67 @@ $(function(){
 	}
     });
     
-    postal.ProvidenceView = postal.BaseView.extend({
+    postal.DistrictView = postal.BaseView.extend({
 	display: 'Bolge',
-	container: postal.containers.providence,
-	subModuleView: postal.DistrictView,
-	subModuleContainer: postal.containers.district
-    });
-    
-    postal.TownshipView = postal.BaseView.extend({
-	display: 'ilce',
-	container: postal.containers.township,
+	code: 'district',
+	container: postal.containers.district,
 	subModuleView: postal.ProvidenceView,
 	subModuleContainer: postal.containers.providence
     });
     
+    postal.TownshipView = postal.BaseView.extend({
+	display: 'ilce',
+	code: 'township',
+	container: postal.containers.township,
+	subModuleView: postal.DistrictView,
+	subModuleContainer: postal.containers.district
+    });
+    
     postal.CityView = postal.BaseView.extend({
 	display: 'Sehir',
+	code: 'city',
 	container: postal.containers.city,
 	subModuleView: postal.TownshipView,
 	subModuleContainer: postal.containers.township
     });
 
 
-    postal.citiesView = new postal.CityView({baseKey:'cities'});
+    ////////////
+    // ROUTER //
+    ////////////
+    postal.Router = Backbone.Router.extend({
+	routes:{
+	    '': 'init',
+	    '/city/:city': 'set',
+	    '/city/:city/township/:township': 'set',
+	    '/city/:city/township/:township/district/:district': 'set',
+	    '/city/:city/township/:township/district/:district/providence/:providence': 'set'
 
+	},
+	init:function(){
+	    //clear submodules if necessary
+	    if(postal.citiesView)
+		postal.citiesView.clearSubModules();
+	    //clear results div
+	    postal.containers.result.html('');
+	    //create a new cities view
+	    postal.citiesView = new postal.CityView({baseKey:postal.cities_key});
+	},
+	set: function(city,township,district,providence){
+	    //get selections list
+	    var selections = _.filter([city, township, district, providence], function(e){return e;});
+	    //if this is first time openning the app create default cities view
+	    //if it is not first time,select given selections
+	    if(postal.citiesView)
+		postal.citiesView.select(selections);
+	    else
+		postal.citiesView = new postal.CityView({baseKey:postal.cities_key,selections:selections});
+	}
+    });
 
-    ////////////////
-    // INITIALIZE //
-    ////////////////
-    // $.getJSON(postal.getFileUrl(postal.cities_key),
-    // 	      function(data, textStatus, jqXHR){
-    // 		  if(textStatus==='success'){
-    // 		      postal.cities = new postal.BaseCollection(data);
-    // 		      postal.citiesView = new postal.CityView({collection:postal.cities});
-    // 		      postal.containers.city.children().remove();
-    // 		      postal.containers.city.append(postal.citiesView.el);
-    // 		      postal.citiesView.render();
-    // 		  }
-    // 	      });
+    //initialize router
+    postal.router = new postal.Router();
+    Backbone.history.start();
 
     
 });
