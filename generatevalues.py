@@ -1,3 +1,7 @@
+"""
+This script generates files in pkinfo directory.
+it uses a csv file as input.
+"""
 from collections import namedtuple,OrderedDict
 
 from itertools import count
