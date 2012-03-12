@@ -68,7 +68,7 @@ $(function(){
 			    this.select(this.options.selections);
 		    }, this),
 		    error:_.bind(function(models,xhr,options){
-			alert('Server baglantisinda bir problem olustu.');
+			alert('Server bağlantısında bir problem oluştu.');
 		    }, this)
 		});
 
@@ -108,7 +108,7 @@ $(function(){
 	});
 
     postal.ProvidenceView = postal.BaseView.extend({
-	display: 'Mahalle/Koy',
+	display: 'Mahalle/Köy',
 	code: 'providence',
 	container: postal.containers.providence,
 
@@ -133,7 +133,7 @@ $(function(){
     });
     
     postal.DistrictView = postal.BaseView.extend({
-	display: 'Bolge',
+	display: 'Bölge',
 	code: 'district',
 	container: postal.containers.district,
 	subModuleView: postal.ProvidenceView,
@@ -141,7 +141,7 @@ $(function(){
     });
     
     postal.TownshipView = postal.BaseView.extend({
-	display: 'ilce',
+	display: 'İlçe',
 	code: 'township',
 	container: postal.containers.township,
 	subModuleView: postal.DistrictView,
@@ -149,7 +149,7 @@ $(function(){
     });
     
     postal.CityView = postal.BaseView.extend({
-	display: 'Sehir',
+	display: 'Şehir',
 	code: 'city',
 	container: postal.containers.city,
 	subModuleView: postal.TownshipView,
