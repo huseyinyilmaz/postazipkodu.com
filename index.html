@@ -41,11 +41,11 @@
     <!--------------->
     <!-- TEMPLATES -->
     <!--------------->
-    <script src="text/template" id="loadingTemplate">
+    <script type="text/template" id="loadingTemplate">
       <img src="assets/images/loader.gif" alt="Loading..."></img>
     </script>
     
-    <script src="text/template" id="listTemplate">
+    <script type="text/template" id="listTemplate">
       <h3><%= display %> seciniz.</h3>
       <ul class="nav nav-pills nav-stacked">      
       <% collection.each(function(item){
@@ -61,7 +61,7 @@
     </ul>
     </script>
     
-    <script src="text/template" id="resultTemplate">
+    <script type="text/template" id="resultTemplate">
       <div class="alert alert-info">
 	<a class="close" data-dismiss="alert">×</a>	
 	<h2><%=location%> icin posta kodu: <strong><%=code%></strong></h2>
